@@ -1,0 +1,126 @@
+
+//tabla paises
+CREATE TABLE paises (
+    pais_id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL
+);
+
+
+//ciudades
+
+CREATE TABLE ciudades (
+    ciudad_id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    pais_id INT,
+    FOREIGN KEY (pais_id) REFERENCES paises(pais_id)
+);
+
+
+//sucursales
+
+CREATE TABLE sucursales (
+    sucursal_id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    direccion VARCHAR(200),
+    ciudad_id INT,
+    FOREIGN KEY (ciudad_id) REFERENCES ciudades(ciudad_id)
+);
+
+//clientes
+CREATE TABLE clientes (
+    cliente_id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100),
+    direccion VARCHAR(200),
+    telefono VARCHAR(20)
+);
+
+//conductores
+CREATE TABLE conductores (
+    conductor_id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    telefono VARCHAR(20)
+);
+
+
+//auxiliares
+
+CREATE TABLE auxiliares (
+    auxiliar_id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    telefono VARCHAR(20)
+);
+
+//vehículos
+
+CREATE TABLE vehiculos (
+    vehiculo_id INT AUTO_INCREMENT PRIMARY KEY,
+    placa VARCHAR(20) NOT NULL,
+    marca VARCHAR(50),
+    modelo VARCHAR(50),
+    capacidad_carga DECIMAL(10,2),
+    sucursal_id INT,
+    FOREIGN KEY (sucursal_id) REFERENCES sucursales(sucursal_id)
+);
+
+//rutas
+-- Tabla rutas
+CREATE TABLE rutas (
+    ruta_id INT AUTO_INCREMENT PRIMARY KEY,
+    descripcion VARCHAR(200),
+    sucursal_id INT,
+    FOREIGN KEY (sucursal_id) REFERENCES sucursales(sucursal_id)
+);
+
+//-- Tabla ruta_auxiliares (relaciona rutas y auxiliares)
+CREATE TABLE ruta_auxiliares (
+    ruta_id INT,
+    auxiliar_id INT,
+    PRIMARY KEY (ruta_id, auxiliar_id),
+    FOREIGN KEY (ruta_id) REFERENCES rutas(ruta_id),
+    FOREIGN KEY (auxiliar_id) REFERENCES auxiliares(auxiliar_id)
+);
+
+//-- Tabla paquetes
+CREATE TABLE paquetes (
+    paquete_id INT AUTO_INCREMENT PRIMARY KEY,
+    numero_seguimiento VARCHAR(50),
+    peso DECIMAL(10,2),
+    dimensiones VARCHAR(50),
+    contenido TEXT,
+    valor_declarado DECIMAL(10,2),
+    tipo_servicio VARCHAR(50),
+    estado VARCHAR(50)
+);
+
+//-- Tabla seguimiento de paquetes
+CREATE TABLE seguimiento (
+    seguimiento_id INT AUTO_INCREMENT PRIMARY KEY,
+    paquete_id INT,
+    ubicacion VARCHAR(200),
+    fecha_hora TIMESTAMP,
+    estado VARCHAR(50),
+    FOREIGN KEY (paquete_id) REFERENCES paquetes(paquete_id)
+);
+
+//-- Tabla envios
+CREATE TABLE envios (
+    envio_id INT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id INT,
+    paquete_id INT,
+    conductor_id INT,
+    fecha_envio TIMESTAMP,
+    destino VARCHAR(200),
+    ruta_id INT,
+    sucursal_id INT,
+    FOREIGN KEY (cliente_id) REFERENCES clientes(cliente_id),
+    FOREIGN KEY (paquete_id) REFERENCES paquetes(paquete_id),
+    FOREIGN KEY (conductor_id) REFERENCES conductores(conductor_id),
+    FOREIGN KEY (ruta_id) REFERENCES rutas(ruta_id),
+    FOREIGN KEY (sucursal_id) REFERENCES sucursales(sucursal_id)
+);
+
+
+
+
+
